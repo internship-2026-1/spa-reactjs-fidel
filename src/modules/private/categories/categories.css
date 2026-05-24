@@ -1,0 +1,33 @@
+.category-action-cell {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.category-action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 10px;
+  border: 1px solid #d5d9e2;
+  border-radius: 5px;
+  background: #ffffff;
+  color: #475569;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.category-action-btn:hover {
+  background: #f8fafc;
+}
+
+.category-action-btn--edit:hover {
+  border-color: #2563eb;
+  color: #2563eb;
+}
+
+.category-action-btn--danger:hover {
+  border-color: #dc2626;
+  color: #dc2626;
+}

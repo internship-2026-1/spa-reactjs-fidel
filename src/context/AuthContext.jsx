@@ -7,35 +7,34 @@ import { localStorageService,sessionStorageService } from "../services";
 
 const AuthContext = createContext(null);
 
-const MenuAdmin = [
-    {
-        name: "Dashboard",
-        path: "/Dashboard",
-        icon: "Dashboard",
-    },
-    {
-        name: "Usuarios",
-        path: "/Usuarios",
-        icon: "users",
-    }
-];
-
-const MenuUsers = [
-    {
-        name: "Dashboard",
-        path: "/Dashboard",
-        icon: "Dashboard",
-    }
-]
+const menusByRole = {
+  admin: [
+    { name: "Dashboard",   path: "/dashboard",  icon: "dashboard" },
+    { name: "Productos",   path: "/productos",  icon: "box"       },
+    { name: "Categorías",  path: "/categorias", icon: "tag"       },
+    { name: "Pedidos",     path: "/pedidos",    icon: "orders"    },
+    { name: "Usuarios",      path: "/usuarios",     icon: "users"       },
+    { name: "Integración",   path: "/integracion",  icon: "integration" },
+  ],
+  b2c: [
+    { name: "Mis pedidos", path: "/orders", icon: "orders" },
+  ],
+  b2b: [
+    { name: "Mis pedidos", path: "/orders", icon: "orders" },
+  ],
+};
 
 
 export function AuthProvider({ children }){
     const [ user, setUser] = useState(sessionStorageService.get("user"));
     const [ token, setToken] = useState(sessionStorageService.get("token"));
     const [ role, setRole ] = useState(sessionStorageService.get("user")?.role ?? null)
-    const [ menu, setMenu ] = useState(null);
+    const [ menu, setMenu ] = useState(() => {
+        const stored = sessionStorageService.get("user");
+        return stored ? (menusByRole[stored.role] ?? menusByRole.b2c ) : null;
+    });
 
-    const Login = (userData, accessToken, refreshToken ) => {
+    const loginCTX = (userData, accessToken, refreshToken ) => {
         sessionStorageService.set("user", userData);
         sessionStorageService.set("token", accessToken);
 
@@ -44,13 +43,7 @@ export function AuthProvider({ children }){
         setUser(userData);
         setToken(accessToken);
         setRole(userData.role);
-        if(userData.role === 'admin'){
-            console.log("MenuAdmin")
-            setMenu(MenuAdmin);
-        }else {
-            console.log("MenuUsers")
-            setMenu(MenuUsers);
-        }
+        setMenu(menusByRole[userData.role] ?? menusByRole.b2c)
     };
 
     const logout = () => {
@@ -66,7 +59,7 @@ export function AuthProvider({ children }){
 
     return(
         //esto es renderizar provider
-        <AuthContext.Provider value={{user, token, role, menu, Login, logout, isAuthenticated: !!token}}>
+        <AuthContext.Provider value={{user, token, role, menu, loginCTX, logout, isAuthenticated: !!token}}>
             { children } {/**renderizar componentes hijos */}
         </AuthContext.Provider>
     );

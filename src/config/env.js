@@ -2,7 +2,7 @@
 //src/config/env.js
 
 //lista de variables obligarias
-const requiredEnvVars = ["VITE_APP_NAME", "VITE_API_URLs", "VITE_APP_ENV", "VITE_APP_VERSION", "VITE_API_URL", "VITE_X_API_KEY", "VITE_APP_ORIGIN", "VITE_STORAGE_PREFIX", "VITE_API_TIMEOUT"];
+const requiredEnvVars = ["VITE_APP_NAME", "VITE_API_URLs", "VITE_APP_ENV", "VITE_APP_VERSION","VITE_API_URL_CORE", "VITE_API_URL_USERS", "VITE_X_API_KEY", "VITE_APP_ORIGIN", "VITE_STORAGE_PREFIX", "VITE_API_TIMEOUT"];
 
 //valido si existe en mi env
 function getEnvVar(name) {
@@ -27,7 +27,8 @@ export function loadEnvConfig() {
     appEnv: getEnvVar("VITE_APP_ENV"),
     //var env nuevos
     appVersion: getEnvVar("VITE_APP_VERSION"),
-    appApiUrl: getEnvVar("VITE_API_URL"),
+    appURLcore: getEnvVar("VITE_API_URL_CORE"),
+    appURLusers: getEnvVar("VITE_API_URL_USERS"),
     appApiKey: getEnvVar("VITE_X_API_KEY"),
     appAppOrigin: getEnvVar("VITE_APP_ORIGIN"),
     appStoragePrefix: getEnvVar("VITE_STORAGE_PREFIX"),

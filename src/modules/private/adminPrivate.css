@@ -1,0 +1,79 @@
+.admin-module {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 0.25rem 0 2rem;
+}
+
+.admin-module__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.admin-module__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  flex-shrink: 0;
+}
+
+/* Constrain SearchBar width inside the header */
+.admin-module__actions .search-container {
+  max-width: 260px;
+}
+
+.admin-module__titles {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.admin-module__eyebrow {
+  margin: 0;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(0, 0, 0, 0.45);
+}
+
+.admin-module__title {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: rgba(0, 0, 0, 0.88);
+}
+
+/* ── Action buttons inside table cells ──────────────────── */
+.action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  background: transparent;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  color: var(--muted);
+  transition: background 0.12s, color 0.12s, border-color 0.12s;
+  white-space: nowrap;
+}
+
+.action-btn:hover             { background: var(--surface); color: var(--text); }
+.action-btn--edit:hover       { border-color: var(--accent); color: var(--accent); }
+.action-btn--danger:hover     { border-color: #dc2626; color: #dc2626; }
+
+.action-cell {
+  display: flex;
+  gap: 6px;
+}

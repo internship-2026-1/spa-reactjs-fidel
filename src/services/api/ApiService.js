@@ -90,6 +90,9 @@ class ApiService {
 
       if(!response.ok){
         throw new Error (data?.message || `POST ${endpoint} failed with status ${response.status}`);
+        error.data = data;
+        error.status = response.status;
+        throw error;
       };
 
       return data

@@ -1,0 +1,103 @@
+/*disenio para integations*/
+
+/* card ----------------------------------------*/
+.integration-card {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1.75rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  max-width: 640px;
+}
+
+.integration-card__name {
+  margin: 0 0 0.4rem;
+  font-size: 1.0625rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.integration-card__desc {
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+.integration-card__endpoint {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0.75rem 0 0;
+  font-size: 0.8125rem;
+}
+
+.integration-card__endpoint span {
+  font-weight: 600;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 0.7rem;
+}
+
+.integration-card__endpoint code {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 2px 8px;
+  font-size: 0.8125rem;
+  color: var(--text);
+}
+
+.integration-card__action {
+  display: flex;
+}
+
+/* -- result banner ---------------------------------------- */
+.integration-result {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.875rem 1rem;
+  border-radius: 8px;
+  border: 1px solid transparent;
+}
+
+.integration-result--loading {
+  background: #eff6ff;
+  border-color: #bfdbfe;
+}
+
+.integration-result--success {
+  background: #f0fdf4;
+  border-color: #bbf7d0;
+}
+
+.integration-result--error {
+  background: #fef2f2;
+  border-color: #fecaca;
+}
+
+.integration-result__msg {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--text);
+}
+
+.integration-result--success .integration-result__msg { color: #15803d; }
+.integration-result--error   .integration-result__msg { color: #dc2626; }
+
+.integration-result__spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid #bfdbfe;
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }

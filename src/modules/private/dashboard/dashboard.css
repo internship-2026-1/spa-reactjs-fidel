@@ -1,0 +1,191 @@
+.dashboard {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 0.25rem 0 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* headers*******************************************************/
+.dashboard__header {
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.dashboard__eyebrow {
+  margin: 0 0 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.dashboard__title {
+  margin: 0 0 0.35rem;
+  font-size: 1.6rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+
+.dashboard__subtitle {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+/* stats *******************************************************/
+.dashboard__stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr));
+  gap: 1rem;
+}
+
+.dashboard__stat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 1.25rem 1.5rem 1.4rem;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: #fff;
+  text-decoration: none;
+  transition: box-shadow 0.15s, transform 0.15s;
+  position: relative;
+  overflow: hidden;
+}
+
+.dashboard__stat::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  border-radius: 10px 0 0 10px;
+}
+
+.dashboard__stat:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  transform: translateY(-1px);
+}
+
+.dashboard__stat--blue::before   { background: var(--accent); }
+.dashboard__stat--purple::before { background: #7c3aed; }
+.dashboard__stat--orange::before { background: #ea580c; }
+.dashboard__stat--green::before  { background: #16a34a; }
+
+.dashboard__stat-value {
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--text);
+  line-height: 1;
+}
+
+.dashboard__stat-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-top: 0.35rem;
+}
+
+.dashboard__stat-sub {
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+/* section*******************************************************/
+.dashboard__section {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.dashboard__section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.25rem 0.875rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.dashboard__section-title {
+  margin: 0;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.dashboard__section-link {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.dashboard__section-link:hover {
+  text-decoration: underline;
+}
+
+/* table*******************************************************/
+.dashboard__table-wrap {
+  overflow-x: auto;
+}
+
+.dashboard__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8375rem;
+}
+
+.dashboard__table thead tr {
+  background: #f9fafb;
+}
+
+.dashboard__table th {
+  padding: 10px 16px;
+  text-align: left;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.dashboard__table td {
+  padding: 11px 16px;
+  border-top: 1px solid var(--border);
+  color: var(--text);
+  white-space: nowrap;
+}
+
+.dashboard__table tbody tr:hover td {
+  background: #f9fafb;
+}
+
+.dashboard__table-id {
+  font-family: monospace;
+  font-size: 0.8125rem;
+  color: var(--muted);
+}
+
+/* bagdes*******************************************************/
+.dashboard__badge {
+  display: inline-block;
+  padding: 3px 9px;
+  border-radius: 99px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.dashboard__badge--success { background: #dcfce7; color: #15803d; }
+.dashboard__badge--info    { background: #dbeafe; color: #1d4ed8; }
+.dashboard__badge--warning { background: #fef3c7; color: #b45309; }
+.dashboard__badge--neutral { background: var(--surface); color: var(--muted); }

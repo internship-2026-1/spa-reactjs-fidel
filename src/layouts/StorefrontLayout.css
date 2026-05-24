@@ -1,0 +1,103 @@
+/*
+ *diseno para mis paginas homes store
+*/
+
+.storefront-layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+}
+
+.storefront-layout__content {
+  flex: 1;
+}
+
+
+/*navbar ----------------------------------------------------------*/
+.storefront-navbar {
+  display: flex;
+  align-items: center;
+  padding: 0 40px;
+  height: 60px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--surface);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.storefront-navbar__brand {
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--text);
+  text-decoration: none;
+  margin-right: 48px;
+  flex-shrink: 0;
+}
+
+.storefront-navbar__nav {
+  display: flex;
+  gap: 28px;
+  flex: 1;
+}
+
+.storefront-navbar__link {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--muted);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.storefront-navbar__link:hover {
+  color: var(--text);
+}
+
+.storefront-navbar__link--active {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* Action icons */
+.storefront-navbar__actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.storefront-navbar__icon-btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  color: var(--muted);
+  text-decoration: none;
+  transition: background 0.15s, color 0.15s;
+}
+
+.storefront-navbar__icon-btn:hover {
+  background: var(--surface);
+  color: var(--text);
+}
+
+.storefront-navbar__badge {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  min-width: 16px;
+  height: 16px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  border-radius: 99px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 3px;
+}
