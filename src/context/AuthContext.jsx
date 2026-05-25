@@ -18,9 +18,11 @@ const menusByRole = {
   ],
   b2c: [
     { name: "Mis pedidos", path: "/orders", icon: "orders" },
+    { name: "Perfil", path: "/profile", icon: "user" },
   ],
   b2b: [
     { name: "Mis pedidos", path: "/orders", icon: "orders" },
+    { name: "Perfil", path: "/profile", icon: "user" },
   ],
 };
 
@@ -37,6 +39,7 @@ export function AuthProvider({ children }){
     const loginCTX = (userData, accessToken, refreshToken ) => {
         sessionStorageService.set("user", userData);
         sessionStorageService.set("token", accessToken);
+        //sessionStorage.setItem("jwt", accessToken);
 
         if(refreshToken) sessionStorageService.set("refreshToken", refreshToken);
 

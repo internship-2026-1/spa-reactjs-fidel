@@ -26,6 +26,7 @@ import {
 import { createOrder } from "../../../store/slices/ordersSlice";
 import { useAuth } from "../../../context/AuthContext";
 import "./checkout.css";
+import { useEffect } from "react";
 
 const SHIPPING_OPTIONS = {
   express: {
@@ -248,7 +249,8 @@ function ShippingStep() {
 
 /* ── Step 2: Payment ── */
 // este formulario es temporal; luego se reemplaza por stripe checkout
-function PaymentStep() {
+//no me sirve pero quiero tenerlo como modelo
+function ComponenteEjemplo() {
   const dispatch = useDispatch();
 
   return (
@@ -291,6 +293,74 @@ function PaymentStep() {
   );
 }
 
+
+//**------factura demo para no llegar sin info al ckeout */
+function PaymentStep() {
+  const items = useSelector(selectCartItems);
+  const subtotal = useSelector(selectCartSubtotal);
+  const { method } = useSelector(selectShipping);
+
+  const shippingCost = SHIPPING_OPTIONS[method]?.cost ?? 0;
+  const tax = subtotal * 0.16;
+  const total = subtotal + shippingCost + tax;
+
+  return (
+    <div className="checkout-form">
+      <Text variant="HeadlineMedium">Factura de compra</Text>
+
+      <div className="checkout-invoice">
+        <div className="checkout-invoice__header">
+          <span>TECHSPEC</span>
+          <strong>Factura previa</strong>
+        </div>
+
+        <div className="checkout-invoice__items">
+          {items.map((item) => (
+            <div key={item.id} className="checkout-invoice__item">
+              <div>
+                <strong>{item.name}</strong>
+                <span>SKU: {item.sku}</span>
+              </div>
+
+              <div>
+                <span>Cantidad: {item.quantity}</span>
+                <strong>{formatCurrency(Number(item.price) * item.quantity)}</strong>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="checkout-invoice__totals">
+          <div>
+            <span>Subtotal</span>
+            <strong>{formatCurrency(subtotal)}</strong>
+          </div>
+
+          <div>
+            <span>Envio</span>
+            <strong>{shippingCost === 0 ? "Gratis" : formatCurrency(shippingCost)}</strong>
+          </div>
+
+          <div>
+            <span>IVA 16%</span>
+            <strong>{formatCurrency(tax)}</strong>
+          </div>
+
+          <div className="checkout-invoice__total">
+            <span>Total a pagar</span>
+            <strong>{formatCurrency(total)}</strong>
+          </div>
+        </div>
+
+        <p className="checkout-invoice__note">
+          Al presionar pagar seras redirigido a Stripe Checkout para completar el pago seguro.
+        </p>
+      </div>
+    </div>
+  );
+}
+
+
 /* ── Main checkout ── */
 export default function Checkout() {
   const dispatch = useDispatch();
@@ -314,6 +384,12 @@ export default function Checkout() {
 
   // crea la orden en backend usando los productos del carrito
   const handleNext = async () => {
+    if (!items.length || cartCount === 0) {
+      alert("Carrito vacio, no puedes seguir.");
+      navigate("/home");
+      return;
+    }
+
     if (!user?.id) {
       alert("Debes iniciar sesión para continuar con el pago");
       navigate("/login", { state: { from: "/checkout" } });
@@ -324,9 +400,16 @@ export default function Checkout() {
     console.log("DATA CARRITO:", items);
     console.log("CUSTOMER_ID:", user.id);
 
+    if (!shipping.fullName?.trim()) {
+      alert("Ingresa el nombre completo para continuar.");
+      return;
+    }
+
     const result = await dispatch(
       createOrder({
+        
         customer_id: user.id,
+        customer_name: shipping.fullName,
         items: items.map((item) => ({
           product_sku: item.sku,
           quantity: item.quantity,
@@ -340,12 +423,30 @@ export default function Checkout() {
 
   // por ahora solo simula el pago y redirige a exito
   const handlePay = async () => {
+    if (!items.length) {
+      alert("Carrito vacio, no puedes pagar. Sigue comprando.");
+      navigate("/home");
+      return;
+    }
+
+    if (!pendingOrderId) {
+      alert("No hay una orden creada para pagar.");
+      dispatch(prevStep());
+      return;
+    }    
     const result = await dispatch(createCheckoutSession(pendingOrderId)).unwrap();
 
     if (result?.checkout_url) {
       window.location.href = result.checkout_url;
     }
   };
+
+
+  useEffect(() => {
+    if (!items.length && step !== 1) {
+      dispatch(prevStep());
+    }
+  }, [items.length, step, dispatch]);
 
   return (
     <div className="checkout">

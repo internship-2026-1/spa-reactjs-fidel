@@ -14,6 +14,7 @@ export const createCheckoutSession = createAsyncThunk(
     try {
       const response = await apiService.post(
         `${config.appURLcore}${urlEndpointSession}`,
+        //esta ulr es igual a = http://localhost:8080/core/api/v1/apps/payments/create-checkout-session/
         { order_id }
       );
 

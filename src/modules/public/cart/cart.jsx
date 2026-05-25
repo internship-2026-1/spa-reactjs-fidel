@@ -140,7 +140,15 @@ export default function Cart() {
                 <div className="cart__summary-actions">
                     <Button variant="primary"
                     size="full"
-                    onClick={() => navigate('/checkout')}>
+                      onClick={() => {
+                    if (items.length === 0) {
+                      alert("No puedes ingresar, tu carrito está vacío. Sigue comprando.");
+                      navigate("/home");
+                      return;
+                    }
+                
+                    navigate("/checkout");
+                  }}>
                         pagar
                     </Button>
 

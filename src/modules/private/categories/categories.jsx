@@ -238,21 +238,3 @@ export default function Categories() {
     </section>
   );
 }
-
-/*
-1. imports
-2. empty form
-3. componente categories
-4. dispatch
-5. selectors de redux
-6. estados locales
-7. useeffect para cargar categorias
-8. funciones para abrir modales
-9. query del buscador
-10. filtro de categorias
-11. tabledata con numero visual
-12. handles de guardar y eliminar
-13. funcion set del formulario
-14. columnas de la tabla
-15. return con header, tabla y modales
-*/

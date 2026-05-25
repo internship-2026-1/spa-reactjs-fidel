@@ -2,6 +2,7 @@
  * Centralizo la clase y sus metodos para poder consumir api-back usando el patron de singleton
  */
 import { config } from "../../config";
+import { sessionStorageService } from "../storage/sessionStorageService";
 
 class ApiService {
   static instance;
@@ -14,6 +15,7 @@ class ApiService {
   }
 
   getDefaultHeaders() {
+    //const token = sessionStorage.getItem("token");
     const token = sessionStorage.getItem("jwt");
 
     return {

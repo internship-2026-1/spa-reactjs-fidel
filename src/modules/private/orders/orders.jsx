@@ -1,12 +1,18 @@
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Table, FormField, Select, SearchBar } from 'lib-components-react'
-import { selectOrders, fetchOrders} from "../../../store/slices/ordersSlice";
+import { selectOrders, fetchOrders, simulateOrderPayment} from "../../../store/slices/ordersSlice";
 
 import '../adminPrivate.css';
 import { Modal } from "../../../components/modal/modal";
 
-const STATUS_OPTIONS = ["Pendiente", "Confirmado", "Procesando", "En tránsito", "Entregado", "Cancelado"];
+const STATUS_OPTIONS = [
+  { value: "PENDING", label: "Pendiente" },
+  { value: "PAID", label: "Confirmado" },
+  { value: "SYNCED", label: "Entregado / sincronizado" },
+  { value: "FAILED", label: "Fallido" },
+  { value: "CANCELLED", label: "Cancelado" },
+];
 
 const STATUS_COLORS = {
   "Pendiente":   { background: "#f3f4f6", color: "#6b7280" },
@@ -15,6 +21,14 @@ const STATUS_COLORS = {
   "En tránsito": { background: "#dbeafe", color: "#1d4ed8" },
   "Entregado":   { background: "#dcfce7", color: "#15803d" },
   "Cancelado":   { background: "#fee2e2", color: "#dc2626" },
+};
+
+const STATUS_LABELS = {
+  PENDING: "Pendiente",
+  PAID: "Confirmado",
+  SYNCED: "Entregado",
+  FAILED: "Cancelado",
+  CANCELLED: "Cancelado",
 };
 
 
@@ -52,16 +66,34 @@ export default function Orders() {
       );
     });
 
+    //la columna visual en vez de id pedidos
+    const tableData = filtered.map((pedi, index) => ({
+        ...pedi,
+        numero: index + 1,
+    }));
+
 
 
 
     // para manejar gestionar
-    const handleSave = async() => {
-        if(mode === "gestionar"){
-            console.log("nuevo estado:", selected.id, newStatus);
-        };
-
+    const handleSave = async () => {
+      if (!selected) return;
+    
+      if (newStatus === "PAID") {
+        await dispatch(simulateOrderPayment(selected.id)).unwrap();
+        await dispatch(fetchOrders());
         setMode(null);
+        return;
+      }
+    
+      if (newStatus === "CANCELLED") {
+        alert("Cancelación pendiente: aun necesito endpoint para poder cancelar.");
+        setMode(null);
+        return;
+      }
+    
+      alert("Este estado por ahora solo es informativo.");
+      setMode(null);
     };
 
     //manejar set
@@ -75,12 +107,13 @@ export default function Orders() {
 
     //columna para la tabla
     const columns = [
-        { key: "id",       header: "# Pedido" },
-        { key: "customer_id", header: "Cliente"  },
+        { key: "numero",       header: "# Pedido" },
+        //{ key: "customer_id", header: "Cliente"  },
+        {key: "customer_name", header: "Cliente", render: (row) => row.customer_name ?? row.customer ?? row.customer_id,},
         { key: "created_at",     header: "Fecha", render: (row) => row.created_at ? new Date(row.created_at).toLocaleDateString() : "",},
         { key: "items",    header: "Ítems", render: (row) => row.items?.length ?? 0,},
         { key: "total_amount",    header: "Total",   render: (row) => `Q${Number(row.total_amount ?? 0).toFixed(2)}`,},
-        { key: "status",   header: "Estado" },
+        { key: "status",   header: "Estado", render: (row) => <StatusBadge status={row.status} />},
         { key: "actions",  header: "Acciones",
             render: (row) => (
                 <div className="category-action-cell">
@@ -92,7 +125,23 @@ export default function Orders() {
 
     //comonentes
     function StatusBadge({ status }) {
-      return <span>{status}</span>;
+      const label = STATUS_LABELS[status] ?? status;
+      const colors = STATUS_COLORS[label] ?? STATUS_COLORS["Pendiente"];
+
+      return (
+        <span
+          style={{
+            background: colors.background,
+            color: colors.color,
+            padding: "4px 10px",
+            borderRadius: "999px",
+            fontWeight: 600,
+            fontSize: "12px",
+          }}
+        >
+          {label}
+        </span>
+      );
     }
 
     function Detail({ label, value }) {
@@ -118,7 +167,7 @@ export default function Orders() {
             </header>
 
             {/**tabla */}
-            <Table data={filtered} columns={columns} keyField="id" emptyMessage="No hay pedidos." itemsPerPage={10} />
+            <Table data={tableData} columns={columns} keyField="id" emptyMessage="No hay pedidos." itemsPerPage={10} />
 
             {/**modal gestionar */}
             { mode === "gestionar" && selected && (
@@ -131,8 +180,12 @@ export default function Orders() {
                     </div>
                     <FormField label="Estado del pedido" name="status">
                         <Select value={newStatus} onChange={(e) => setNewStatus(e.target.value)}>
-                            {STATUS_OPTIONS.map((s) => <option key={s} value={s}>{s}</option>)}
-                        </Select>
+  {STATUS_OPTIONS.map((s) => (
+    <option key={s.value} value={s.value}>
+      {s.label}
+    </option>
+  ))}
+</Select>
                     </FormField>
                 </Modal>
             )}

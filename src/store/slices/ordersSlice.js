@@ -43,6 +43,38 @@ export const createOrder = createAsyncThunk(
   }
 );
 
+//simular pago 
+export const simulateOrderPayment = createAsyncThunk(
+  "orders/simulateOrderPayment",
+  async (orderId, { rejectWithValue }) => {
+    try {
+      const response = await apiService.post(
+        `${config.appURLcore}apps/orders/orders/${orderId}/simularPago/`
+      );
+
+      return response.body;
+    } catch (error) {
+      return rejectWithValue(error.message || "Error al simular pago");
+    }
+  }
+);
+
+// thunk para get order by id
+export const fetchOrdersByCustomer = createAsyncThunk(
+  "orders/fetchOrdersByCustomer",
+  async (customerId, { rejectWithValue }) => {
+    try {
+      const response = await apiService.get(
+        `${config.appURLcore}apps/orders/orders/customer/${customerId}/`
+      );
+
+      return response.body ?? [];
+    } catch (error) {
+      return rejectWithValue(error.message || "Error al obtener mis pedidos");
+    }
+  }
+);
+
 const initialState = {
   items: [],
   loading: false,
@@ -81,7 +113,30 @@ const ordersSlice = createSlice({
       .addCase(createOrder.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-      });
+      })
+      //simular pago
+      .addCase(simulateOrderPayment.fulfilled, (state, action) => {
+        const updatedOrder = action.payload;
+      
+        const index = state.items.findIndex((o) => o.id === updatedOrder.id);
+      
+        if (index !== -1) {
+          state.items[index] = updatedOrder;
+        }
+      })
+      // get order por customer_id
+      .addCase(fetchOrdersByCustomer.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchOrdersByCustomer.fulfilled, (state, action) => {
+        state.loading = false;
+        state.items = action.payload;
+      })
+      .addCase(fetchOrdersByCustomer.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
   },
 });
 

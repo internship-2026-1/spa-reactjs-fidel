@@ -7,6 +7,7 @@ import { config } from "../../config";
 
 const urlEndpoint = "users/" //get
 const urlcreateUser = "register/"//crear usuario
+const urlprofile = 'profile/'//get|put
 
 export const fetchUsers = createAsyncThunk(
   "users/fetchUsers",
@@ -56,7 +57,39 @@ export const patchUser = createAsyncThunk(
   }
 );
 
+//-----------thunk para profile
+export const fetchUserProfile = createAsyncThunk(
+  "users/fetchUserProfile",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await apiService.get(
+        `${config.appURLusers}${urlprofile}`,
+        console.log(`URLFIDE?: ${config.appURLusers}${urlprofile}`)
+      );
+      console.log(`URLFIDE2?: ${config.appURLusers}${urlprofile}`)
 
+      return response.body;
+    } catch (error) {
+      return rejectWithValue(error.message || "Error al obtener perfil");
+    }
+  }
+);
+
+export const updateUserProfile = createAsyncThunk(
+  "users/updateUserProfile",
+  async (profileData, { rejectWithValue }) => {
+    try {
+      const response = await apiService.put(
+        `${config.appURLusers}${urlprofile}`,
+        profileData
+      );
+
+      return response.body;
+    } catch (error) {
+      return rejectWithValue(error.message || "Error al actualizar perfil");
+    }
+  }
+);
 
 
 
@@ -64,6 +97,10 @@ const initialState = {
   items: [],
   loading: false,
   error: null,
+  profile: null,
+  profileLoading: false,
+  profileError: null,
+  profileSuccess: null,
 };
 
 const usersSlice = createSlice({
@@ -117,11 +154,45 @@ const usersSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
+      //case fetchprofile
+    .addCase(fetchUserProfile.pending, (state) => {
+      state.profileLoading = true;
+      state.profileError = null;
+    })
+    .addCase(fetchUserProfile.fulfilled, (state, action) => {
+      state.profileLoading = false;
+      state.profile = action.payload;
+    })
+    .addCase(fetchUserProfile.rejected, (state, action) => {
+      state.profileLoading = false;
+      state.profileError = action.payload;
+    })
+    //case para profile update
+    .addCase(updateUserProfile.pending, (state) => {
+      state.profileLoading = true;
+      state.profileError = null;
+      state.profileSuccess = null;
+    })
+    .addCase(updateUserProfile.fulfilled, (state, action) => {
+      state.profileLoading = false;
+      state.profile = action.payload;
+      state.profileSuccess = "Perfil actualizado correctamente";
+    })
+    .addCase(updateUserProfile.rejected, (state, action) => {
+      state.profileLoading = false;
+      state.profileError = action.payload;
+    })
   },
 });
 
 export const selectUsers = (state) => state.users.items;
 export const selectUsersLoading = (state) => state.users.loading;
 export const selectUsersError = (state) => state.users.error;
+
+export const selectUserProfile = (state) => state.users.profile;
+export const selectUserProfileLoading = (state) => state.users.profileLoading;
+export const selectUserProfileError = (state) => state.users.profileError;
+export const selectUserProfileSuccess = (state) => state.users.profileSuccess;
+
 
 export default usersSlice.reducer;
